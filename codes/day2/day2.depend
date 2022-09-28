@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1664258645 source:c:\save tools\codes\day2\main.c
+	<stdio.h>
+	<stdlib.h>
+	"MyMath.h"
+
+1664258584 c:\save tools\codes\day2\mymath.h
+	<stdio.h>
+
+1664258690 source:c:\save tools\codes\day2\add.c
+	"myMath.h"
+
+1664258673 source:c:\save tools\codes\day2\div.c
+	"myMath.h"
+
+1664258667 source:c:\save tools\codes\day2\mul.c
+	"myMath.h"
+
+1664258683 source:c:\save tools\codes\day2\sub.c
+	"myMath.h"
+
