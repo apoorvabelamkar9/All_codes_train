@@ -1,0 +1,801 @@
+
+
+void water_raise()
+  	{ 
+  		int i;
+  		Bits1_PutVal(0xe0);
+  					 for(i=0;i<0x100fff; i++);
+  					 Bits1_PutVal(0xd0);
+  					 for(i=0;i<0x100fff;i++);
+  					 Bits1_PutVal(0xb0);                                                                                                                                         
+  					 for(i=0;i<0x100fff; i++);
+  					 Bits1_PutVal(0x70);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  					 for(i=0;i<0x100fff; i++); 
+  			     Bits1_PutVal(0xf1);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf2);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf4);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf8);
+  				 for(i=0;i<0x100fff; i++);
+  	}
+
+void water_fall()
+  	{
+	int i;
+  		             Bits1_PutVal(0x70);
+  					 for(i=0;i<0x100fff; i++);
+  					 Bits1_PutVal(0xb0);
+  					 for(i=0;i<0x100fff;i++);
+  					 Bits1_PutVal(0xd0);                                                                                                                                         
+  					 for(i=0;i<0x100fff; i++);
+  					 Bits1_PutVal(0xe0);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  					 for(i=0;i<0x100fff; i++); 
+  					 
+  			     Bits1_PutVal(0xf8);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf4);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf2);
+  				 for(i=0;i<0x100fff; i++);
+  				 Bits1_PutVal(0xf1);
+  				 for(i=0;i<0x100fff; i++);
+  	}
+  	
+
+
+
+
+
+
+
+///.....WORKING ON COMMON CATHODE AND ANODE ---------4bits separte 2 bits
+
+
+
+
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CC.h"
+#include "BitsIoLdd1.h"
+#include "LED_CA.h"
+#include "BitsIoLdd2.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void LLDD_CA_Leds(unsigned char ucUserData)
+{
+	LED_CA_PutVal(~ucUserData);
+}
+
+void LLDD_CC_Leds(unsigned char ucUserData)
+{
+	LED_CC_PutVal(ucUserData);
+}
+
+
+int main(void)
+{
+unsigned char i;
+long int j;
+
+
+ 
+  PE_low_level_init();
+  
+	while(1)
+	{
+		for(i=0x8;i>0;i=i>>1)
+		{
+			LLDD_CA_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+		for(i=0x8;i>0;i=i>>1)
+		{
+			LLDD_CC_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+  	}
+  	
+ 
+     #ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif  
+
+  for(;;){}
+  
+}
+
+
+
+/////////////////------8bit together anode and cathode
+
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CACC.h"
+#include "BitsIoLdd1.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+
+
+int main(void)
+{
+unsigned char i;
+long int  j;
+
+
+  PE_low_level_init();
+  
+	while(1)
+	{
+		for(i=0x80;i>0;i=i>>1)
+		{
+			LLDD_CA7654_CC3210_Leds(i);
+			for(j=0;j<0x7fff;j++);
+		}
+		
+  	}
+  	
+
+    #ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif                  
+  for(;;){}
+}
+
+
+
+
+
+
+
+
+/////------------------------WATER FALL MODEL USING 8BIT
+
+
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CACC.h"
+#include "BitsIoLdd1.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+
+int main(void)
+{
+unsigned char i;
+long int  j;
+
+  PE_low_level_init();
+  
+	while(1)
+	{
+		for(i=0x80;i>0;i=i>>1)
+		{
+			LLDD_CA7654_CC3210_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+		
+  	}
+  	
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif 
+  
+  for(;;){}
+  
+}
+
+
+
+
+
+////--------------------------------WATER RAISING USING 8BIT
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CACC.h"
+#include "BitsIoLdd1.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void WF_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+void WR_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+int main(void)
+{
+unsigned char i;
+long int  j;
+
+
+ 
+  PE_low_level_init();
+  
+	while(1)
+	{   
+		for(i=0x01;i>0;i=i<<1)
+		{
+			//WF_LLDD_CA7654_CC3210_Leds(i);
+			WR_LLDD_CA7654_CC3210_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+		
+  	}
+  	
+  
+    #ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif                  
+  for(;;){}
+  
+}
+
+
+
+
+
+///-----------------------------REVERSE BOUNCE-----------------------------///
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CACC.h"
+#include "BitsIoLdd1.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void WF_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+void WR_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+int main(void)
+{
+unsigned char i;
+long int  j;
+
+
+
+
+  PE_low_level_init();
+  
+	while(1)
+	{   
+		unsigned char m;
+		unsigned char k;
+		
+	      for(m=0x80; m>0; m=m>>1)
+{
+
+		for(i=m;i>0;i=i>>1)
+				{ 
+					WF_LLDD_CA7654_CC3210_Leds(i);
+					for(j=0;j<0x100fff;j++);
+				}
+		for(i=01;i<m;i=i<<1)
+		{
+			
+			WR_LLDD_CA7654_CC3210_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+	
+	}
+}
+	
+  
+    #ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif                  
+  for(;;){}
+  
+}
+
+
+
+
+
+
+
+
+
+
+///----------BOUNCING LEDS------------///
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "LED_CACC.h"
+#include "BitsIoLdd1.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void WF_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+void WR_LLDD_CA7654_CC3210_Leds(unsigned char ucUserData)
+{
+	unsigned char ucCAData,ucCCData;
+	ucCAData=ucUserData;
+	ucCAData=~ucCAData;
+	ucCAData=ucCAData & 0Xf0;
+	
+	ucCCData=ucUserData & 0x0f;
+	ucUserData=ucCAData | ucCCData;
+	LED_CACC_PutVal(ucUserData);
+}
+
+int main(void)
+{
+unsigned char i;
+long int  j;
+
+
+
+
+  PE_low_level_init();
+ 
+
+	while(1)
+	{   
+		unsigned char m;
+		unsigned char k;
+		
+	      for(m=0x80; m>0; m=m>>1)
+{
+
+		for(i=m;i>0;i=i>>1)
+				{ 
+					WF_LLDD_CA7654_CC3210_Leds(i);
+					for(j=0;j<0x100fff;j++);
+				}
+		for(i=01;i<m;i=i<<1)
+		{
+			
+			WR_LLDD_CA7654_CC3210_Leds(i);
+			for(j=0;j<0x100fff;j++);
+		}
+	
+	}
+}
+	
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();
+ #endif                  
+
+  for(;;){}
+ 
+}
+
+
+
+
+
+
+
+///-------------------7 SEGMENT RUNNING NUMBERS-----------------------------////
+
+
+
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "S7_LED_CC.h"
+#include "BitsIoLdd1.h"
+#include "S7_LED_CA.h"
+#include "BitsIoLdd2.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+
+
+
+int main(void)
+{
+
+unsigned char s7CC[]={0x3f,0x30,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x71,0x00};
+unsigned char s7CA[]={0x80,0xc0,0xf9,0xa4,0xb0,0x92,0x82,0xf8,0x80,0x90,0x88,0x83,0xc6,0xa1,0x86,0x8e};
+char *p;
+char *p1;
+long int j;
+
+  PE_low_level_init();
+  
+	while(1)
+	{   
+    for(p=s7CC;p<s7CC+16;p++)
+    
+    {
+      
+       S7_LED_CC_PutVal(*p);
+       for(j=0;j<0x100fff;j++);
+    
+    for(p1=s7CA;p1<s7CA+16;p1++)
+       
+       {
+    	
+          S7_LED_CA_PutVal(*p1);
+          for(j=0;j<0x100fff;j++);
+       }
+    }
+  }
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+  
+  for(;;){}
+  
+
+}
+
+
+
+
+
+
+////--------------------------STANDING NUMBERS---------////
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "Trigger.h"
+#include "BitsIoLdd1.h"
+#include "BitsIoLdd2.h"
+#include "Datapin.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+
+
+int main(void)
+{
+
+unsigned char s7CA[]={0x40,0xf9,0x24,0x30,0x19,0x12,0x02,0xf8,0x00,0x10,0x08,0x03,0x46,0x21,0x06,0x0e};
+
+unsigned int p;   
+long int j;
+
+
+
+  PE_low_level_init();
+  
+	while(1)
+	{   
+	 
+	
+ for(p=0;p<4;p++)
+  
+  {
+
+    	
+             Trigger_PutVal(0x7);
+             Datapin_PutVal(s7CA[p]);
+             for(j=0;j<0xfff;j++);
+             p++;
+             
+            
+             Trigger_PutVal(0xb);
+             Datapin_PutVal(s7CA[p]);
+             for(j=0;j<0xfff;j++);
+             p++;
+             
+          
+             Trigger_PutVal(0xd);
+             Datapin_PutVal(s7CA[p]);
+             for(j=0;j<0xfff;j++);
+             p++;
+          
+             Trigger_PutVal(0xe);
+             Datapin_PutVal(s7CA[p]);
+             for(j=0;j<0xfff;j++);
+             
+             
+          
+    }
+	}
+
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+ 
+  for(;;){}
+ 
+}
+
+
+
+
+
+
+
+
+
+//////////////---------------------------digital clock-------------------------///////
+
+
+
+
+/* Including needed modules to compile this module/procedure */
+#include "Cpu.h"
+#include "Events.h"
+#include "Trigger.h"
+//#include "S7_LED_CC.h"
+#include "BitsIoLdd1.h"
+//#include "S7_LED_CA.h"
+#include "BitsIoLdd2.h"
+#include "Datapin.h"
+/* Including shared modules, which are used for whole project */
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+int main(void)
+{
+
+unsigned char s7CA[]={0x40,0xf9,0x24,0x30,0x19,0x12,0x02,0xf8,0x00,0x10,0x08,0x03,0x46,0x21,0x06,0x0e};
+
+unsigned int p1,p2,p3,p4,i;   
+
+long int j;
+
+
+  PE_low_level_init();
+ 
+	while(1)
+	{   
+ for(p1=0;p1<6;p1++)
+ {
+	 for(p2=0;p2<9;p2++)
+	 {
+		 for(p3=0;p3<6;p3++)
+		 {
+			 for(p4=0;p4<9;p4++)
+			 {
+  
+				 for(i=0;i<50;i++)
+				 {
+   
+	         
+             Datapin_PutVal(s7CA[p1]);
+             Trigger_ClrVal();
+             for(j=0;j<0xfff;j++);
+             Trigger_SetVal();
+             p1++;
+  
+             Datapin_PutVal(s7CA[p2]);
+             Trigger_ClrVal();
+             for(j=0;j<0xfff;j++);
+             Trigger_SetVal();
+             p2++;
+      
+         
+             Datapin_PutVal(s7CA[p3]);
+             Trigger_ClrVal();
+             for(j=0;j<0xfff;j++);
+             Trigger_SetVal();
+             p3++;
+          
+             
+             Datapin_PutVal(s7CA[p4]); 
+             Trigger_ClrVal();
+             for(j=0;j<0xfff;j++);
+             Trigger_SetVal();
+             p4++;
+             
+          
+    
+}
+	}
+	}
+	}
+	}
+	}
+ 
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+ 
+  for(;;){}
+ 
+}
+
+
+
+
+/////////---------------Sub rountines with Digital clock------------///////
+
+
+#include "Cpu.h"
+#include "Events.h"
+#include "Trigger.h"
+#include "BitsIoLdd1.h"
+#include "BitsIoLdd2.h"
+#include "Datapin.h"
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+
+void Trigger(unsigned char t1,unsigned char t2,unsigned char t3, unsigned char t4)
+{
+
+
+	long int j;
+	
+	             Trigger_PutVal(0x7);
+	             Datapin_PutVal(t4);
+	             for(j=0;j<0xfff;j++);
+	            
+	             Trigger_PutVal(0xb);
+	             Datapin_PutVal(t3);
+	             for(j=0;j<0xfff;j++);
+	          
+	             Trigger_PutVal(0xd);
+	             Datapin_PutVal(t2);
+	             for(j=0;j<0xfff;j++);
+	
+	             Trigger_PutVal(0xe);
+	             Datapin_PutVal(t1);
+	             for(j=0;j<0xfff;j++);
+	
+}
+int main(void)
+{
+unsigned char s7CA[]={0x40,0xf9,0x24,0x30,0x19,0x12,0x02,0xf8,0x00,0x10,0x08,0x03,0x46,0x21,0x06,0x0e};
+int p1,p2,p3,p4;
+
+
+
+  PE_low_level_init();
+  
+	while(1)
+	{   
+
+		 for(p1=0;p1<6;p1++)
+		 {
+			 for(p2=0;p2<10;p2++)
+			 {
+				 for(p3=0;p3<6;p3++)
+				 {
+					 for(p4=0;p4<10;p4++)
+					 {
+		               Trigger(s7CA[p1],s7CA[p2],s7CA[p3],s7CA[p4]);
+						
+					 }
+				 }
+			 }
+		 }
+    
+}
+	
+	
+
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+  
+  for(;;){}
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
