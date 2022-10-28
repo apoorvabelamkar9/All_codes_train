@@ -1,0 +1,276 @@
+////////////-----------------SEMAPHORES-01-------///////////
+
+/* ###################################################################
+**     Filename    : ProcessorExpert.c
+**     Project     : ProcessorExpert
+**     Processor   : MKL25Z128VLK4
+**     Version     : Driver 01.01
+**     Compiler    : GNU C Compiler
+**     Date/Time   : 2022-10-28, 14:03, # CodeGen: 0
+**     Abstract    :
+**         Main module.
+**         This module contains user's application code.
+**     Settings    :
+**     Contents    :
+**         No public methods
+**
+** ###################################################################*/
+/*!
+** @file ProcessorExpert.c
+** @version 01.01
+** @brief
+**         Main module.
+**         This module contains user's application code.
+*/         
+/*!
+**  @addtogroup ProcessorExpert_module ProcessorExpert module documentation
+**  @{
+*/         
+/* MODULE ProcessorExpert */
+
+
+/* Including needed modules to compile this module/procedure */
+#include "Cpu.h"
+#include "Events.h"
+#include "CsIO1.h"
+#include "IO1.h"
+#include "FRTOS1.h"
+#include "MCUC1.h"
+#include "UTIL1.h"
+#include "UTIL2.h"
+/* Including shared modules, which are used for whole project */
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+#define portMAX_DELAY_vATaskL 1000
+#define portMAX_DELAY_vATaskM 50
+#define portMAX_DELAY_vATaskH 1000
+
+/* User includes (#include below this line is not maintained by Processor Expert) */
+static void vATaskL( void * pvParameters );
+static void vATaskM( void * pvParameters );
+static void vATaskH( void * pvParameters );
+
+SemaphoreHandle_t xSemaphore;
+//SemaphoreHandle_t xSemaphore1,;
+
+static void vATaskL( void * pvParameters )
+{
+    /* Attempt to create a semaphore. */
+
+	      printf("from ............vATaskL L entry\n");
+          xSemaphoreTake( xSemaphore,portMAX_DELAY);
+          printf("The vATaskL is creating task2 \n");
+          xTaskCreate(vATaskM,"TASK2 ",100,NULL,11,NULL);
+          printf(" from vATask is creating task3\n");
+          xTaskCreate(vATaskH,"TASK3 ",100,NULL,12,NULL);
+          printf("from ............vATaskL giving semaphores \n");
+          xSemaphoreGive( xSemaphore); 
+          printf("from ............vATaskL L exit\n");
+          fflush(stdout);
+          vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+          
+}
+static void vATaskM( void * pvParameters )
+{
+    printf("from vATaskM .......... entry\n");
+ 	vTaskDelay(portMAX_DELAY_vATaskM/portTICK_PERIOD_MS);
+ 	printf("from vATaskM .......... exit\n");
+ 	fflush(stdout);
+ 	vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+ 	
+}
+
+
+static void vATaskH( void * pvParameters )
+{
+     
+    	printf("from vATaskH............... entry\n");
+    	xSemaphoreTake( xSemaphore,portMAX_DELAY);
+    	printf("vATaskH releasing sem\n");
+        xSemaphoreGive( xSemaphore);
+    	printf("from vATaskH............... exit\n");
+    	fflush(stdout);
+    	vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+    
+}
+
+int main(void)
+/*lint -restore Enable MISRA rule (6.3) checking. */
+{
+  /* Write your local variable definition here */
+
+  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+  PE_low_level_init();
+  /*** End of Processor Expert internal initialization.                    ***/
+
+  /* Write your code here */
+  /* For example: for(;;) { } */
+  vSemaphoreCreateBinary(xSemaphore);
+  xTaskCreate(vATaskL,"TASKL",100,NULL,10,NULL);
+ 
+  /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+  /*** End of RTOS startup code.  ***/
+  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+  for(;;){}
+  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+} /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
+
+/* END ProcessorExpert */
+/*!
+** @}
+*/
+/*
+** ###################################################################
+**
+**     This file was created by Processor Expert 10.3 [05.08]
+**     for the Freescale Kinetis series of microcontrollers.
+**
+** ###################################################################
+*/
+
+
+
+
+/////////////----Semaphores-02-----///////////////////
+/* ###################################################################
+**     Filename    : ProcessorExpert.c
+**     Project     : ProcessorExpert
+**     Processor   : MKL25Z128VLK4
+**     Version     : Driver 01.01
+**     Compiler    : GNU C Compiler
+**     Date/Time   : 2022-10-28, 14:03, # CodeGen: 0
+**     Abstract    :
+**         Main module.
+**         This module contains user's application code.
+**     Settings    :
+**     Contents    :
+**         No public methods
+**
+** ###################################################################*/
+/*!
+** @file ProcessorExpert.c
+** @version 01.01
+** @brief
+**         Main module.
+**         This module contains user's application code.
+*/         
+/*!
+**  @addtogroup ProcessorExpert_module ProcessorExpert module documentation
+**  @{
+*/         
+/* MODULE ProcessorExpert */
+
+
+/* Including needed modules to compile this module/procedure */
+#include "Cpu.h"
+#include "Events.h"
+#include "CsIO1.h"
+#include "IO1.h"
+#include "FRTOS1.h"
+#include "MCUC1.h"
+#include "UTIL1.h"
+#include "UTIL2.h"
+/* Including shared modules, which are used for whole project */
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
+
+#define portMAX_DELAY_vATaskL 1000
+#define portMAX_DELAY_vATaskM 50
+#define portMAX_DELAY_vATaskH 1000
+
+/* User includes (#include below this line is not maintained by Processor Expert) */
+static void vATaskL( void * pvParameters );
+static void vATaskM( void * pvParameters );
+static void vATaskH( void * pvParameters );
+
+SemaphoreHandle_t xSemaphore;
+//SemaphoreHandle_t xSemaphore1,;
+
+static void vATaskL( void * pvParameters )
+{
+    /* Attempt to create a semaphore. */
+
+	      printf("from ............vATaskL L entry\n");
+          xSemaphoreTake( xSemaphore,portMAX_DELAY);
+          printf("The vATaskL is creating task2 \n");
+          xTaskCreate(vATaskM,"TASK2 ",100,NULL,11,NULL);
+          printf(" from vATask is creating task3\n");
+          xTaskCreate(vATaskH,"TASK3 ",100,NULL,12,NULL);
+          printf("from ............vATaskL giving semaphores \n");
+          xSemaphoreGive( xSemaphore); 
+          printf("from ............vATaskL L exit\n");
+          fflush(stdout);
+          vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+          
+}
+static void vATaskM( void * pvParameters )
+{
+    printf("from vATaskM .......... entry\n");
+ 	vTaskDelay(portMAX_DELAY_vATaskM/portTICK_PERIOD_MS);
+ 	printf("from vATaskM .......... exit\n");
+ 	fflush(stdout);
+ 	vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+ 	
+}
+
+
+static void vATaskH( void * pvParameters )
+{
+     
+    	printf("from vATaskH............... entry\n");
+    	xSemaphoreTake( xSemaphore,portMAX_DELAY);
+    	printf("vATaskH releasing sem\n");
+        xSemaphoreGive( xSemaphore);
+    	printf("from vATaskH............... exit\n");
+    	fflush(stdout);
+    	vTaskDelay(portMAX_DELAY_vATaskL/portTICK_PERIOD_MS);
+    
+}
+
+int main(void)
+/*lint -restore Enable MISRA rule (6.3) checking. */
+{
+  /* Write your local variable definition here */
+
+  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+  PE_low_level_init();
+  /*** End of Processor Expert internal initialization.                    ***/
+
+  /* Write your code here */
+  /* For example: for(;;) { } *
+  xSemaphore = xSemaphoreCreateMutex();
+  xTaskCreate(vATaskL,"TASKL",100,NULL,10,NULL);
+ 
+  /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+  #ifdef PEX_RTOS_START
+    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+  #endif
+  /*** End of RTOS startup code.  ***/
+  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+  for(;;){}
+  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+} /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
+
+/* END ProcessorExpert */
+/*!
+** @}
+*/
+/*
+** ###################################################################
+**
+**     This file was created by Processor Expert 10.3 [05.08]
+**     for the Freescale Kinetis series of microcontrollers.
+**
+** ###################################################################
+*/
+
